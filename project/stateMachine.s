@@ -39,21 +39,29 @@ case_1:
 	mov #10, r12
 	mov &COLOR_BLUE, &my_color
 	call #move_shape_Left
+	mov 0x0c8e, r12
+	call #buzzer_set_period
 	jmp end
 case_2:
 	mov #10, r12
 	mov &COLOR_RED, &my_color
 	call #move_shape_Right
+	mov 0x09f7,r12
+	call #buzzer_set_period
 	jmp end
 case_3:
 	mov 0x001f, r12
 	mov &COLOR_YELLOW, &my_color
 	call #clearScreen
+	mov 0x0eee, r12
+	call #buzzer_set_period
 	jmp end
 case_4:
 	mov 0x001f, r12
 	mov &COLOR_MAGENTA, &my_color
 	call #clearScreen
+	mov #0, r12
+	call #buzzer_set_period
 	jmp end
 end:
 	pop r0

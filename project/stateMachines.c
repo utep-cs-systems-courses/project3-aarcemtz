@@ -11,34 +11,14 @@ char button_four;
 
 void state_advance(){
   my_shape(COLOR_RED);
-  // Turn on Normal light
-  if(state==1){
-    buzzer_set_period(3822);
-    //move_shape_Left(10);
-    my_color=COLOR_BLUE;
+  switch(state){
+  default: state++;
+  case 1: my_color=COLOR_BLUE; move_shape_Left(10);buzzer_set_period(2551); break;
+  case 2: my_color=COLOR_RED; move_shape_Up(10);buzzer_set_period(3214); break;
+  case 3: my_color=COLOR_YELLOW; move_shape_Down(10); buzzer_set_period(3822); break;
+  case 4: my_color=COLOR_MAGENTA; move_shape_Right(10);buzzer_set_period(0); break;
   }
-  // Turn on half DIM light
-  else if(state==2){
-    buzzer_set_period(3214);
-    //move_shape_Down(10);
-    my_color=COLOR_RED;
-  }
-
-  // Turn on Full DIM light
-  else if (state==3){
-    buzzer_set_period(2551);
-    //move_shape_Up(10);
-    my_color=COLOR_GREEN;
-  }
-
-  else if (state==4){
-    buzzer_set_period(2551);
-    //move_shape_Right(10);
-    my_color=COLOR_MAGENTA;
-  }
-  buzzer_set_period(0);
 }
-
 // Helper functions
 void turn_on_red(){
   red_on=1;
@@ -60,3 +40,4 @@ void turn_off_green(){
   led_changed=1;
   led_update();
 }
+

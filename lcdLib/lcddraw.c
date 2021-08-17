@@ -4,14 +4,55 @@
 #include "lcdutils.h"
 #include "lcddraw.h"
 
-
 /** Draw single pixel at x,row 
  *
  *  \param col Column to draw to
  *  \param row Row to draw to
  *  \param colorBGR Color of pixel in BGR
  */
-void drawPixel(u_char col, u_char row, u_int colorBGR) 
+int my_color = COLOR_RED;
+int offsetX = 40;
+int offsetY = 50;
+
+void move_shape_Left(u_int x){
+  my_shape(COLOR_WHITE);
+  offsetX-=x;
+}
+void move_shape_Right(u_int x){
+  my_shape(COLOR_WHITE);
+  offsetX+=x;
+}
+
+void move_shape_Up(u_int y){
+  my_shape(COLOR_WHITE);
+  offsetY-=y;
+}
+void move_shape_Down(u_int y){
+  my_shape(COLOR_WHITE);
+  offsetY+=y;
+}
+void my_shape(){
+  fillRectangle(offsetX+1, offsetY+15, 50, 20, my_color);
+  // fillRectangle(offsetX+15, offsetY+1, 20, 50, my_color);
+  // Left Arrow
+  int offsetXTL= offsetX;     // X Triangle Left
+  int offsetYTL= offsetY+49; // Y Triangle Left
+
+  // Right Arrow
+  int offsetXTR= offsetX+50;   // X Triangle Right
+  int offsetYTR= offsetY; // Y Triangle Right
+  for(int r=0; r<25; r++){
+    for(int c=0; c<=r; c++){
+      // Left Arrow
+      // drawPixel(offsetX-c, offsetY+r, my_color);
+      // drawPixel(offsetXTL-c, offsetYTL-r, my_color);
+      // Right Arrow
+      drawPixel(offsetXTR+c, offsetYTL-r, my_color);
+      drawPixel(offsetXTR+c, offsetYTR+r, my_color);
+    }
+  }
+}
+void drawPixel(u_char col, u_char row, u_int colorBGR)
 {
   lcd_setArea(col, row, col, row);
   lcd_writeColor(colorBGR);
@@ -25,7 +66,8 @@ void drawPixel(u_char col, u_char row, u_int colorBGR)
  *  \param height height of rectangle
  *  \param colorBGR Color of rectangle in BGR
  */
-void fillRectangle(u_char colMin, u_char rowMin, u_char width, u_char height, 
+void fillRectangle(u_char colMin, u_char rowMin, u_char width, u_char height,
+
 		   u_int colorBGR)
 {
   u_char colLimit = colMin + width, rowLimit = rowMin + height;
@@ -41,24 +83,22 @@ void fillRectangle(u_char colMin, u_char rowMin, u_char width, u_char height,
  *  
  *  \param colorBGR The color to fill screen
  */
-void clearScreen(u_int colorBGR) 
+void clearScreen(u_int colorBGR)
 {
   u_char w = screenWidth;
   u_char h = screenHeight;
   fillRectangle(0, 0, screenWidth, screenHeight, colorBGR);
 }
-
 /** 5x7 font - this function draws background pixels
  *  Adapted from RobG's EduKit
  */
-void drawChar5x7(u_char rcol, u_char rrow, char c, 
-     u_int fgColorBGR, u_int bgColorBGR) 
+void drawChar5x7(u_char rcol, u_char rrow, char c,
+		 u_int fgColorBGR, u_int bgColorBGR)
 {
   u_char col = 0;
   u_char row = 0;
   u_char bit = 0x01;
   u_char oc = c - 0x20;
-
   lcd_setArea(rcol, rrow, rcol + 4, rrow + 7); /* relative to requested col/row */
   while (row < 8) {
     while (col < 5) {
@@ -71,7 +111,6 @@ void drawChar5x7(u_char rcol, u_char rrow, char c,
     row++;
   }
 }
-
 /** Draw string at col,row
  *  Type:
  *  FONT_SM - small (5x8,) FONT_MD - medium (8x12,) FONT_LG - large (11x16)
@@ -85,7 +124,8 @@ void drawChar5x7(u_char rcol, u_char rrow, char c,
  *  \param bgColorBGR Background color in BGR
  */
 void drawString5x7(u_char col, u_char row, char *string,
-		u_int fgColorBGR, u_int bgColorBGR)
+		   u_int fgColorBGR, u_int bgColorBGR)
+
 {
   u_char cols = col;
   while (*string) {
@@ -93,7 +133,6 @@ void drawString5x7(u_char col, u_char row, char *string,
     cols += 6;
   }
 }
-
 
 /** Draw rectangle outline
  *  
@@ -104,14 +143,14 @@ void drawString5x7(u_char col, u_char row, char *string,
  *  \param colorBGR Color of rectangle in BGR
  */
 void drawRectOutline(u_char colMin, u_char rowMin, u_char width, u_char height,
-		     u_int colorBGR)
-{
+		     u_int colorBGR){
   /**< top & bot */
   fillRectangle(colMin, rowMin, width, 1, colorBGR);
   fillRectangle(colMin, rowMin + height, width, 1, colorBGR);
-
+  /**< left & right */
+  fillRectangle(colMin, rowMin, width, 1, colorBGR);
+  fillRectangle(colMin, rowMin + height, width, 1, colorBGR);
   /**< left & right */
   fillRectangle(colMin, rowMin, 1, height, colorBGR);
   fillRectangle(colMin + width, rowMin, 1, height, colorBGR);
 }
-
